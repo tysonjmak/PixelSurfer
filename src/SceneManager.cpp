@@ -3,11 +3,6 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
-void SceneManager::init(InputManager* input)
-{
-	this->input = input;
-}
-
 void SceneManager::dispose()
 {
 	std::cout << "Disposing all scenes..." << std::endl;

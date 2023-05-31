@@ -20,7 +20,7 @@ const bool WINDOW_VSYNC_ENABLED = true;
 
 // Managers
 InputManager input;
-SceneManager scene;
+SceneManager scene(&input);
 
 int main()
 {
@@ -59,8 +59,7 @@ int main()
 		return -1;
 	}
 
-	// Initialize scene manager and scenes
-	scene.init(&input);
+	// Set initial scene and set running state
 	scene.changeScene(SandboxScene::instance());
 	scene.start();
 
