@@ -1,0 +1,6 @@
+#ignore all .vcxproj files
+*.vcxproj
+*.vcxproj.*
+
+#ignore object folder
+/x64
