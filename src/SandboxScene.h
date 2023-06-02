@@ -5,13 +5,13 @@
 class SandboxScene : public Scene
 {
 public:
-	void init();
+	void init(InputManager* input_manager, SceneManager* scene_manager);
 	void dispose();
 
 	void pause();
 	void resume();
 
-	void processInput(InputManager* input, SceneManager* scene, float dt);
+	void processInput(float dt);
 	void update(float dt);
 	void render();
 

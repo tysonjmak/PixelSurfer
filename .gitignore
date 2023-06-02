@@ -4,3 +4,6 @@
 
 #ignore object folder
 /x64
+
+#ignore vendor header libraries
+/src/vendor

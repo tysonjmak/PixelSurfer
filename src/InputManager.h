@@ -18,8 +18,8 @@ public:
      *
      * Sets the boolean value state of a key given the GLFW key index
      *
-     * @param int key - GLFW key index to set state of
-     * @param bool state - Boolean value of key state to set
+     * @param key - GLFW key index to set state of
+     * @param state - Boolean value of key state to set
      */
 	void setKeyState(int key, bool state);
 
@@ -27,8 +27,8 @@ public:
      * 
      * Sets the boolean value state of a key's previous state
      * 
-     * @param int key - GLFW key index to set previous state of
-     * @param bool state - Boolean value of previous key state to set
+     * @param key - GLFW key index to set previous state of
+     * @param state - Boolean value of previous key state to set
      */
     void setPrevKeyState(int key, bool state);
 
@@ -36,7 +36,7 @@ public:
      *
      * Returns whether the passed key index is in a pressed state
      *
-     * @param int key - GLFW key index to get state of
+     * @param key - GLFW key index to get state of
      * 
      * @return Whether given key is in a pressed state
      */
@@ -46,8 +46,9 @@ public:
      *
      * Returns whether the passed key index is in a released state
      *
-     * @param int key - GLFW key index to get state of
-     * @return  Whether given key is in a released state
+     * @param key - GLFW key index to get state of
+     * 
+     * @return Whether given key is in a released state
      */
 	bool isKeyUp(int key);
 
@@ -55,7 +56,8 @@ public:
      * 
      * Returns whether the passed key index has been pressed just once
      * 
-     * @param int key - GLFW key index to get state of
+     * @param key - GLFW key index to get state of
+     * 
      * @return Whether given key has just been pressed
      */
 	bool isKeyPressed(int key);
@@ -64,7 +66,8 @@ public:
      * 
      * Returns whether the passed key index has been released just once
      *
-     * @param int key - GLFW key index to get state of
+     * @param key - GLFW key index to get state of
+     * 
      * @return Whether given key has just been released
      */
 	bool isKeyReleased(int key);

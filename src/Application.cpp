@@ -9,24 +9,24 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void window_close_callback(GLFWwindow* window);
+void window_size_callback(GLFWwindow* window, int width, int height);
 
-// Window settings
+// Initial window parameters
 const char* SCR_TITLE = "PixelSurfer";
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
-const bool WINDOW_RESIZABLE = false;
+
+// Window settings
+const bool WINDOW_RESIZABLE = true;
 const bool WINDOW_FULLSCREEN = false;
 const bool WINDOW_VSYNC_ENABLED = true;
 
 // Managers
 InputManager input;
-SceneManager scene(&input);
+SceneManager scene(&input, SCR_WIDTH, SCR_HEIGHT);
 
 int main()
 {
-	// Get all initialization done first
-	// ---------------------------------
-
 	// Initialize GLFW and configure
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -49,6 +49,7 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetWindowCloseCallback(window, window_close_callback);
+	glfwSetWindowSizeCallback(window, window_size_callback);
 
 	// Initialize GLEW
 	GLenum error = glewInit();
@@ -113,4 +114,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void window_close_callback(GLFWwindow* window)
 {
 	scene.quit();
+}
+
+// On window resize event, set dimensions in scene manager
+void window_size_callback(GLFWwindow* window, int width, int height)
+{
+	scene.resize((float)width, (float)height);
 }

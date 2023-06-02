@@ -8,67 +8,83 @@ void SceneManager::dispose()
 	std::cout << "Disposing all scenes..." << std::endl;
 
 	// Call dispose on all scenes in stack
-	while (!scenes.empty())
+	while (!m_scenes.empty())
 	{
-		scenes.back()->dispose();
-		scenes.pop_back();
+		m_scenes.back()->dispose();
+		m_scenes.pop_back();
 	}
 }
 
 void SceneManager::changeScene(Scene* scene)
 {
 	// Cleanup current scene
-	if (!scenes.empty())
+	if (!m_scenes.empty())
 	{
-		scenes.back()->dispose();
-		scenes.pop_back();
+		m_scenes.back()->dispose();
+		m_scenes.pop_back();
 	}
 
 	// Store and initialize new scene
-	scenes.push_back(scene);
-	scenes.back()->init();
+	m_scenes.push_back(scene);
+	m_scenes.back()->init(m_input, this);
 }
 
 void SceneManager::pushScene(Scene* scene)
 {
 	// Pause current scene
-	if (!scenes.empty())
+	if (!m_scenes.empty())
 	{
-		scenes.back()->pause();
+		m_scenes.back()->pause();
 	}
 
 	// Store and initialize new state
-	scenes.push_back(scene);
-	scenes.back()->init();
+	m_scenes.push_back(scene);
+	m_scenes.back()->init(m_input, this);
 }
 
 void SceneManager::popScene()
 {
 	// Cleanup current scene
-	if (!scenes.empty())
+	if (!m_scenes.empty())
 	{
-		scenes.back()->dispose();
-		scenes.pop_back();
+		m_scenes.back()->dispose();
+		m_scenes.pop_back();
 	}
 
 	// Resume previous scene
-	if (!scenes.empty())
+	if (!m_scenes.empty())
 	{
-		scenes.back()->resume();
+		m_scenes.back()->resume();
 	}
 }
 
 void SceneManager::processInput(float dt)
 {
-	scenes.back()->processInput(input, this, dt);
+	m_scenes.back()->processInput(dt);
 }
 
 void SceneManager::update(float dt)
 {
-	scenes.back()->update(dt);
+	m_scenes.back()->update(dt);
 }
 
 void SceneManager::render()
 {
-	scenes.back()->render();
+	m_scenes.back()->render();
+}
+
+void SceneManager::resize(float width, float height)
+{
+	m_width = width;
+	m_height = height;
+}
+
+float SceneManager::getWidth() const
+{
+	return m_width;
+}
+
+float SceneManager::getHeight() const
+{
+	return m_height;
 }

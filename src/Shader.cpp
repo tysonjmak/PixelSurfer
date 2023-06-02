@@ -28,6 +28,66 @@ void Shader::unbind() const
 	glUseProgram(0);
 }
 
+void Shader::setBool(const std::string& name, bool value)
+{
+	glUniform1i(getUniformLocation(name), value);
+}
+
+void Shader::setInt(const std::string& name, int value)
+{
+	glUniform1i(getUniformLocation(name), value);
+}
+
+void Shader::setFloat(const std::string& name, float value)
+{
+	glUniform1f(getUniformLocation(name), value);
+}
+
+void Shader::setVec2(const std::string& name, float x, float y)
+{
+	glUniform2f(getUniformLocation(name), x, y);
+}
+
+void Shader::setVec2(const std::string& name, const glm::vec2& value)
+{
+	glUniform2fv(getUniformLocation(name), 1, &value[0]);
+}
+
+void Shader::setVec3(const std::string& name, float x, float y, float z)
+{
+	glUniform3f(getUniformLocation(name), x, y, z);
+}
+
+void Shader::setVec3(const std::string& name, const glm::vec3& value)
+{
+	glUniform3fv(getUniformLocation(name), 1, &value[0]);
+}
+
+void Shader::setVec4(const std::string& name, float x, float y, float z, float w)
+{
+	glUniform4f(getUniformLocation(name), x, y, z, w);
+}
+
+void Shader::setVec4(const std::string& name, const glm::vec4& value)
+{
+	glUniform4fv(getUniformLocation(name), 1, &value[0]);
+}
+
+void Shader::setMat2(const std::string& name, const glm::mat2& value)
+{
+	glUniformMatrix2fv(getUniformLocation(name), 1, GL_FALSE, &value[0][0]);
+}
+
+void Shader::setMat3(const std::string& name, const glm::mat3& value)
+{
+	glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, &value[0][0]);
+}
+
+void Shader::setMat4(const std::string& name, const glm::mat4& value)
+{
+	glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &value[0][0]);
+}
+
 void Shader::parseShader()
 {
 	std::fstream shader_file;
@@ -113,4 +173,14 @@ void Shader::compileShader()
 	// Delete shaders after use
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
+}
+
+int Shader::getUniformLocation(const std::string& name)
+{
+	int location = glGetUniformLocation(m_ID, name.c_str());
+
+	if (location == -1)
+		std::cout << "WARNING: Uniform \"" << name << "\" does not exist for shader at path: " << m_file_path << std::endl;
+
+	return location;
 }
