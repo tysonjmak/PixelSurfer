@@ -1,8 +1,12 @@
 #pragma once
 
-#include <GL/glew.h>
 #include <string>
-#include <glm/glm.hpp>
+
+struct ShaderSource
+{
+	std::string vertex;
+	std::string fragment;
+};
 
 class Shader
 {
@@ -14,8 +18,7 @@ private:
 	unsigned int m_ID;
 
 	// Shader source strings
-	std::string m_vertex_string;
-	std::string m_fragment_string;
+	ShaderSource m_source;
 
 	// Splits shader file into vertex and fragment strings
 	void parseShader();

@@ -40,7 +40,7 @@ public:
 	virtual void render() = 0;
 
 protected:
-	Scene() {}
+	Scene() : input(nullptr), scene(nullptr) {}
 
 	// Store input and scene managers for scene use
 	InputManager* input;

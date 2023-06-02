@@ -2,7 +2,7 @@
 *.vcxproj
 *.vcxproj.*
 
-#ignore object folder
+#ignore build artifacts
 /x64
 
 #ignore vendor header libraries

@@ -1,3 +1,5 @@
+#include <GL/glew.h>
+#include <glm/glm.hpp>
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -12,7 +14,7 @@ enum class ShaderType
 };
 
 Shader::Shader(const char* file_path)
-	: m_file_path(file_path), m_ID(0)
+	: m_file_path(file_path), m_ID(0), m_source({ "null", "null" })
 {
 	parseShader();
 	compileShader();
@@ -118,8 +120,8 @@ void Shader::parseShader()
 			}
 		}
 
-		m_vertex_string = vertex_stream.str();
-		m_fragment_string = fragment_stream.str();
+		m_source.vertex = vertex_stream.str();
+		m_source.fragment = fragment_stream.str();
 	}
 	else
 	{
@@ -130,8 +132,8 @@ void Shader::parseShader()
 
 void Shader::compileShader()
 {
-	const char* vertex_source = m_vertex_string.c_str();
-	const char* fragment_source = m_fragment_string.c_str();
+	const char* vertex_source = m_source.vertex.c_str();
+	const char* fragment_source = m_source.fragment.c_str();
 	unsigned int vertex, fragment;
 	int success;
 	char infoLog[512];
