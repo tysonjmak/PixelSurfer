@@ -1,90 +1,83 @@
 #include <iostream>
 
 #include "SceneManager.h"
-#include "Scene.h"
 
-void SceneManager::dispose()
+float SceneManager::m_width = 0.0f;
+float SceneManager::m_height = 0.0f;
+bool SceneManager::m_running = false;
+std::stack<std::unique_ptr<Scene>> SceneManager::m_scenes;
+
+std::unique_ptr<Scene>& SceneManager::getCurrent()
 {
-	std::cout << "Disposing all scenes..." << std::endl;
-
-	// Call dispose on all scenes in stack
-	while (!m_scenes.empty())
-	{
-		m_scenes.back()->dispose();
-		m_scenes.pop_back();
-	}
+	return m_scenes.top();
 }
 
-void SceneManager::changeScene(Scene* scene)
+bool SceneManager::isRunning() { return m_running; }
+
+void SceneManager::start() { m_running = true; }
+
+void SceneManager::quit() { m_running = false; }
+
+void SceneManager::change(std::unique_ptr<Scene> scene)
 {
-	// Cleanup current scene
+	// Cleanup the current scene
 	if (!m_scenes.empty())
 	{
-		m_scenes.back()->dispose();
-		m_scenes.pop_back();
+		m_scenes.top()->dispose();
+		m_scenes.pop();
 	}
 
-	// Store and initialize new scene
-	m_scenes.push_back(scene);
-	m_scenes.back()->init(m_input, this);
+	// Store and initialize the new scene
+	m_scenes.push(std::move(scene));
+	m_scenes.top()->init();
 }
 
-void SceneManager::pushScene(Scene* scene)
+void SceneManager::push(std::unique_ptr<Scene> scene)
 {
 	// Pause current scene
 	if (!m_scenes.empty())
 	{
-		m_scenes.back()->pause();
+		m_scenes.top()->pause();
 	}
 
-	// Store and initialize new state
-	m_scenes.push_back(scene);
-	m_scenes.back()->init(m_input, this);
+	// Store and initialize pushed scene
+	m_scenes.push(std::move(scene));
+	m_scenes.top()->init();
 }
 
-void SceneManager::popScene()
+void SceneManager::pop()
 {
-	// Cleanup current scene
+	// Cleanup pushed scene
 	if (!m_scenes.empty())
 	{
-		m_scenes.back()->dispose();
-		m_scenes.pop_back();
+		m_scenes.top()->dispose();
+		m_scenes.pop();
 	}
 
-	// Resume previous scene
+	// Resume the previous scene
 	if (!m_scenes.empty())
 	{
-		m_scenes.back()->resume();
+		m_scenes.top()->resume();
 	}
 }
 
-void SceneManager::processInput(float dt)
+bool SceneManager::empty()
 {
-	m_scenes.back()->processInput(dt);
+	return m_scenes.empty();
 }
 
-void SceneManager::update(float dt)
+float SceneManager::getWidth()
 {
-	m_scenes.back()->update(dt);
+	return m_width;
 }
 
-void SceneManager::render()
+float SceneManager::getHeight()
 {
-	m_scenes.back()->render();
+	return m_height;
 }
 
 void SceneManager::resize(float width, float height)
 {
 	m_width = width;
 	m_height = height;
-}
-
-float SceneManager::getWidth() const
-{
-	return m_width;
-}
-
-float SceneManager::getHeight() const
-{
-	return m_height;
 }

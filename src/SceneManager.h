@@ -1,86 +1,57 @@
 #pragma once
 
-#include <vector>
-#include "InputManager.h"
+#include <stack>
+#include <memory>
 
-class Scene;
+#include "Scene.h"
 
 class SceneManager
 {
 public:
+	// Return reference to current scene
+	static std::unique_ptr<Scene>& getCurrent();
 
-	// Set the member input manager
-	SceneManager(InputManager* input, float width, float height) : m_input(input), m_width(width), m_height(height) { }
-
-	// Dispose of all scenes
-	void dispose();
-
-	/**
-	 * 
-	 * Changes the current scene in stack via a pointer to the scene's singleton instance
-	 * 
-	 * @param scene - Pointer to the scene to change to
-	 */
-	void changeScene(Scene* scene);
-
-	/**
-	 *
-	 * Pushes given scene over current scene via a pointer to the new scene's singleton instance
-	 *
-	 * @param scene - Pointer to the scene to change to
-	 */
-	void pushScene(Scene* scene);
-
-	// Pop the current scene and resume the previous scene
-	void popScene();
-
-	/**
-	 *
-	 * First function call in the game loop. Handles current scene's input
-	 *
-	 * @param dt - Change in time between function calls (between frames)
-	 */
-	void processInput(float dt);
-
-	/**
-	 *
-	 * Second function call in the game loop. Updates current scene.
-	 *
-	 * @param dt - Change in time between functionc alls (between frames)
-	 */
-	void update(float dt);
-
-	// Final function call in the game loop. Draws current scene.
-	void render();
-
-	// Change screen width and height on window resize
-	void resize(float width, float height);
+	// Game status management
 
 	// Returns whether the game loop is running
-	bool isRunning() { return m_running; }
+	static bool isRunning();
 
 	// Begins the game loop
-	void start() { m_running = true; }
+	static void start();
 
 	// Ends the game loop
-	void quit() { m_running = false; }
+	static void quit();
 
-	// Getter for window width
-	float getWidth() const;
+	// Game scene management
 
-	// Getter for window height
-	float getHeight() const;
+	// Replace the current scene with a new scene
+	static void change(std::unique_ptr<Scene> scene);
+
+	// Push a scene in front of current scene
+	static void push(std::unique_ptr<Scene> scene);
+
+	// Pop a pushed scene
+	static void pop();
+
+	// Return whether scene stack is empty
+	static bool empty();
+
+	// Return width of window
+	static float getWidth();
+
+	// Return height of window
+	static float getHeight();
+
+	// On window resize event
+	static void resize(float width, float height);
 
 private:
-	// Input manager instance to pass along to scenes
-	InputManager* m_input;
-
-	// Scene stack to store the displayed scenes
-	std::vector<Scene*> m_scenes;
+	// Store window dimensions for scene use
+	static float m_width, m_height;
 
 	// Controls the game loop 'while' loop
-	bool m_running = false;
+	static bool m_running;
 
-	// Store screen dimensions for use in scenes
-	float m_width, m_height;
+	// Store the scenes in here
+	static std::stack<std::unique_ptr<Scene>> m_scenes;
 };

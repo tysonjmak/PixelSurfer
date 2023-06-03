@@ -1,8 +1,7 @@
 #include "InputManager.h"
 
-InputManager::InputManager() : 
-	m_key_states(),
-	m_prev_key_states() { }
+bool InputManager::m_key_states[NUM_KEYS];
+bool InputManager::m_prev_key_states[NUM_KEYS];
 
 void InputManager::setKeyState(int key, bool state)
 {

@@ -6,14 +6,12 @@ class InputManager
 {
 private:
     // Booleans of all GLFW keys that return up/down states
-	bool m_key_states[NUM_KEYS];
+	static bool m_key_states[NUM_KEYS];
 
     // Booleans of the previous stored key states
-    bool m_prev_key_states[NUM_KEYS];
+    static bool m_prev_key_states[NUM_KEYS];
 
 public:
-	InputManager();
-	
 	/**
      *
      * Sets the boolean value state of a key given the GLFW key index
@@ -21,7 +19,7 @@ public:
      * @param key - GLFW key index to set state of
      * @param state - Boolean value of key state to set
      */
-	void setKeyState(int key, bool state);
+	static void setKeyState(int key, bool state);
 
     /**
      * 
@@ -30,7 +28,7 @@ public:
      * @param key - GLFW key index to set previous state of
      * @param state - Boolean value of previous key state to set
      */
-    void setPrevKeyState(int key, bool state);
+    static void setPrevKeyState(int key, bool state);
 
 	/**
      *
@@ -40,7 +38,7 @@ public:
      * 
      * @return Whether given key is in a pressed state
      */
-	bool isKeyDown(int key);
+	static bool isKeyDown(int key);
 	
 	/**
      *
@@ -50,7 +48,7 @@ public:
      * 
      * @return Whether given key is in a released state
      */
-	bool isKeyUp(int key);
+	static bool isKeyUp(int key);
 
     /**
      * 
@@ -60,7 +58,7 @@ public:
      * 
      * @return Whether given key has just been pressed
      */
-	bool isKeyPressed(int key);
+	static bool isKeyPressed(int key);
 
     /**
      * 
@@ -70,5 +68,5 @@ public:
      * 
      * @return Whether given key has just been released
      */
-	bool isKeyReleased(int key);
+	static bool isKeyReleased(int key);
 };

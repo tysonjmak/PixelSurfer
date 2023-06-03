@@ -1,13 +1,10 @@
 #pragma once
 
-#include "SceneManager.h"
-
 class Scene
 {
 public:
-
 	// Called when the scene is activated. Used to load graphics, textures, etc.
-	virtual void init(InputManager* input_manager, SceneManager* scene_manager) = 0;
+	virtual void init() = 0;
 
 	// Called when the scene is deactivated. Used to free any resources, reset scene, etc.
 	virtual void dispose() = 0;
@@ -22,8 +19,6 @@ public:
 	 *
 	 * First function call in the game loop. Used to handle all input, scene changes, etc.
 	 * 
-	 * @param input - A pointer to the main input manager instance
-	 * @param scene - A pointer to the main scene manager instance
 	 * @param dt - Change in time between function calls (between frames)
 	 */
 	virtual void processInput(float dt) = 0;
@@ -40,9 +35,5 @@ public:
 	virtual void render() = 0;
 
 protected:
-	Scene() : input(nullptr), scene(nullptr) {}
-
-	// Store input and scene managers for scene use
-	InputManager* input;
-	SceneManager* scene;
+	Scene() {}
 };

@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include "InputManager.h"
 #include "SceneManager.h"
 #include "SandboxScene.h"
 
@@ -20,10 +21,6 @@ const unsigned int SCR_HEIGHT = 720;
 const bool WINDOW_RESIZABLE = true;
 const bool WINDOW_FULLSCREEN = false;
 const bool WINDOW_VSYNC_ENABLED = true;
-
-// Managers
-InputManager input;
-SceneManager scene(&input, SCR_WIDTH, SCR_HEIGHT);
 
 int main()
 {
@@ -61,14 +58,15 @@ int main()
 	}
 
 	// Set initial scene and set running state
-	scene.changeScene(SandboxScene::instance());
-	scene.start();
+	SceneManager::resize(SCR_WIDTH, SCR_HEIGHT);
+	SceneManager::change(std::make_unique<SandboxScene>());
+	SceneManager::start();
 
 	// Begin game loop after initialization
 	float current_time;
 	float delta_time;
 	float last_time = 0.0f;
-	while (scene.isRunning())
+	while (SceneManager::isRunning())
 	{
 		// Calculate frame time to pass along to scenes
 		current_time = (float)glfwGetTime();
@@ -79,16 +77,15 @@ int main()
 		glfwPollEvents();
 
 		// Update and draw scenes
-		scene.processInput(delta_time);
-		scene.update(delta_time);
-		scene.render();
+		SceneManager::getCurrent()->processInput(delta_time);
+		SceneManager::getCurrent()->update(delta_time);
+		SceneManager::getCurrent()->render();
 
 		// Swap buffers
 		glfwSwapBuffers(window);
 	}
 
 	// Dispose all loaded scenes and terminate GLFW
-	scene.dispose();
 	glfwTerminate();
 
 	return 0;
@@ -105,19 +102,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	if (key >= 0 && key < NUM_KEYS)
 	{
-		input.setPrevKeyState(key, input.isKeyDown(key));
-		input.setKeyState(key, action);
+		InputManager::setPrevKeyState(key, InputManager::isKeyDown(key));
+		InputManager::setKeyState(key, action);
 	}
 }
 
 // On window close event, end game loop
 void window_close_callback(GLFWwindow* window)
 {
-	scene.quit();
+	SceneManager::quit();
 }
 
 // On window resize event, set dimensions in scene manager
 void window_size_callback(GLFWwindow* window, int width, int height)
 {
-	scene.resize((float)width, (float)height);
+	SceneManager::resize(width, height);
 }

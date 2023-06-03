@@ -4,31 +4,26 @@
 #include <stb/stb_image.h>
 #include <iostream>
 
+#include "InputManager.h"
+#include "SceneManager.h"
 #include "SandboxScene.h"
 #include "Shader.h"
-
-// Singleton instance
-SandboxScene SandboxScene::m_sandbox_scene;
 
 Shader* shader;
 unsigned int VAO;
 unsigned int texture;
 
-void SandboxScene::init(InputManager* input_manager, SceneManager* scene_manager)
+void SandboxScene::init()
 {
-	// Set local managers before any code
-	input = input_manager;
-	scene = scene_manager;
-
 	shader = new Shader("res/shaders/Shader.glsl");
 	shader->bind();
 
 	float vertices[] = {
-		 // Positions       // Texture coordinates
-		 128.0f,  128.0f,   1.0f, 1.0f,
-		 128.0f, -128.0f,   1.0f, 0.0f,
-		-128.0f, -128.0f,   0.0f, 0.0f,
-		-128.0f,  128.0f,   0.0f, 1.0f
+		// Positions       // Texture coordinates
+		128.0f,  128.0f,   1.0f, 1.0f,
+		128.0f, -128.0f,   1.0f, 0.0f,
+	   -128.0f, -128.0f,   0.0f, 0.0f,
+	   -128.0f,  128.0f,   0.0f, 1.0f
 	};
 
 	unsigned int indices[] = {
@@ -61,7 +56,7 @@ void SandboxScene::init(InputManager* input_manager, SceneManager* scene_manager
 	// Set texture wrapping parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	
+
 	// Set texture filtering parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -98,8 +93,8 @@ void SandboxScene::resume()
 
 void SandboxScene::processInput(float dt)
 {
-	if (input->isKeyPressed(GLFW_KEY_ESCAPE))
-		scene->quit();
+	if (InputManager::isKeyPressed(GLFW_KEY_ESCAPE))
+		SceneManager::quit();
 }
 
 void SandboxScene::update(float dt)
@@ -112,10 +107,17 @@ void SandboxScene::render()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	shader->bind();
-	glm::mat4 projection = glm::ortho(-scene->getWidth() / 2.0f, scene->getWidth() / 2.0f, -scene->getHeight() / 2.0f, scene->getHeight() / 2.0f, 0.0f, 1.0f);
+	glm::mat4 projection = glm::ortho(
+		-SceneManager::getWidth() / 2.0f,
+		 SceneManager::getWidth() / 2.0f,
+		-SceneManager::getHeight() / 2.0f,
+		 SceneManager::getHeight() / 2.0f
+	);
 	shader->setMat4("projection", projection);
 
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
+
+
