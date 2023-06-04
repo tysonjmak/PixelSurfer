@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "InputManager.h"
+#include "ResourceManager.h"
 #include "SceneManager.h"
 #include "SandboxScene.h"
 
@@ -20,7 +21,7 @@ const unsigned int SCR_HEIGHT = 720;
 // Window settings
 const bool WINDOW_RESIZABLE = true;
 const bool WINDOW_FULLSCREEN = false;
-const bool WINDOW_VSYNC_ENABLED = true;
+const bool WINDOW_VSYNC_ENABLED = false;
 
 int main()
 {
@@ -37,7 +38,7 @@ int main()
 	glfwSwapInterval(WINDOW_VSYNC_ENABLED);
 	if (window == NULL)
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
+		std::cout << "ERROR: Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
@@ -52,14 +53,14 @@ int main()
 	GLenum error = glewInit();
 	if (error != GLEW_OK)
 	{
-		std::cout << "Failed to initialize GLEW" << std::endl;
-		std::cout << "Error:\n" << glewGetErrorString(error) << std::endl;
+		std::cout << "ERROR: Failed to initialize GLEW" << std::endl;
+		std::cout << "Error string:\n" << glewGetErrorString(error) << std::endl;
 		return -1;
 	}
 
 	// Set initial scene and set running state
 	SceneManager::resize(SCR_WIDTH, SCR_HEIGHT);
-	SceneManager::change(std::make_unique<SandboxScene>());
+	SceneManager::change(std::make_unique<SandboxScene>("Sandbox"));
 	SceneManager::start();
 
 	// Begin game loop after initialization
@@ -84,6 +85,10 @@ int main()
 		// Swap buffers
 		glfwSwapBuffers(window);
 	}
+
+	// Dispose scenes
+	SceneManager::dispose();
+	ResourceManager::dispose();
 
 	// Dispose all loaded scenes and terminate GLFW
 	glfwTerminate();
@@ -116,5 +121,5 @@ void window_close_callback(GLFWwindow* window)
 // On window resize event, set dimensions in scene manager
 void window_size_callback(GLFWwindow* window, int width, int height)
 {
-	SceneManager::resize(width, height);
+	SceneManager::resize((float)width, (float)height);
 }

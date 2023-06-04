@@ -45,6 +45,9 @@ public:
 	// On window resize event
 	static void resize(float width, float height);
 
+	// Dispose all scenes in stack
+	static void dispose();
+
 private:
 	// Store window dimensions for scene use
 	static float m_width, m_height;

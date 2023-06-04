@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "InputManager.h"
+#include "ResourceManager.h"
 #include "SceneManager.h"
 #include "SandboxScene.h"
 #include "Shader.h"
@@ -15,7 +16,8 @@ unsigned int texture;
 
 void SandboxScene::init()
 {
-	shader = new Shader("res/shaders/Shader.glsl");
+	ResourceManager::load(new Shader, "res/shaders/Shader.glsl", "basic");
+	shader = ResourceManager::get<Shader>("basic");
 	shader->bind();
 
 	float vertices[] = {
@@ -78,7 +80,7 @@ void SandboxScene::init()
 
 void SandboxScene::dispose()
 {
-	delete shader;
+
 }
 
 void SandboxScene::pause()
@@ -109,9 +111,9 @@ void SandboxScene::render()
 	shader->bind();
 	glm::mat4 projection = glm::ortho(
 		-SceneManager::getWidth() / 2.0f,
-		 SceneManager::getWidth() / 2.0f,
+		SceneManager::getWidth() / 2.0f,
 		-SceneManager::getHeight() / 2.0f,
-		 SceneManager::getHeight() / 2.0f
+		SceneManager::getHeight() / 2.0f
 	);
 	shader->setMat4("projection", projection);
 
@@ -119,5 +121,3 @@ void SandboxScene::render()
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
-
-

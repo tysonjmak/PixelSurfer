@@ -34,6 +34,15 @@ public:
 	// Final function call in the game loop. Used to draw all vertices/elements.
 	virtual void render() = 0;
 
+	// Access scene ID
+	const char* getSceneID() const
+	{
+		return m_scene_ID;
+	}
+
 protected:
-	Scene() {}
+	Scene(const char* scene_ID) : m_scene_ID(scene_ID) {}
+
+	// Store scene name ID for debugging
+	const char* m_scene_ID = "null";
 };

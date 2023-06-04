@@ -4,6 +4,9 @@
 
 class SandboxScene : public Scene
 {
+public:
+	SandboxScene(const char* scene_ID) : Scene(scene_ID) { }
+
 	// Inherited via Scene
 	virtual void init() override;
 	virtual void dispose() override;

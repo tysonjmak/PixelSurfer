@@ -1,9 +1,3 @@
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
 #include "Shader.h"
 
 enum class ShaderType
@@ -13,11 +7,16 @@ enum class ShaderType
 	FRAGMENT = 1
 };
 
-Shader::Shader(const char* file_path)
-	: m_file_path(file_path), m_ID(0), m_source({ "null", "null" })
+void Shader::load(const std::string& path)
 {
+	m_path = path;
 	parseShader();
 	compileShader();
+}
+
+void Shader::dispose()
+{
+	glDeleteShader(m_ID);
 }
 
 void Shader::bind() const
@@ -97,7 +96,7 @@ void Shader::parseShader()
 	std::stringstream fragment_stream;
 	ShaderType type = ShaderType::NONE;
 
-	shader_file.open(m_file_path, std::ios::in);
+	shader_file.open(m_path, std::ios::in);
 	if (shader_file.is_open())
 	{
 		std::string line;
@@ -125,7 +124,7 @@ void Shader::parseShader()
 	}
 	else
 	{
-		std::cout << "ERROR: Could not open file at path: " << m_file_path << std::endl;
+		std::cout << "ERROR: Could not open file at path: " << m_path << std::endl;
 	}
 	shader_file.close();
 }
@@ -146,7 +145,7 @@ void Shader::compileShader()
 	if (!success)
 	{
 		glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-		std::cout << "ERROR: Vertex shader compilation failed at path: " << m_file_path << "\n" << infoLog << std::endl;
+		std::cout << "ERROR: Vertex shader compilation failed at path: " << m_path << "\n" << infoLog << std::endl;
 	}
 
 	// Fragment shader
@@ -157,7 +156,7 @@ void Shader::compileShader()
 	if (!success)
 	{
 		glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-		std::cout << "ERROR: Fragment shader compilation failed at path: " << m_file_path << "\n" << infoLog << std::endl;
+		std::cout << "ERROR: Fragment shader compilation failed at path: " << m_path << "\n" << infoLog << std::endl;
 	}
 
 	// Shader program
@@ -169,7 +168,7 @@ void Shader::compileShader()
 	if (!success)
 	{
 		glGetShaderInfoLog(m_ID, 512, NULL, infoLog);
-		std::cout << "ERROR: Shader program linking failed at path: " << m_file_path << "\n" << infoLog << std::endl;
+		std::cout << "ERROR: Shader program linking failed at path: " << m_path << "\n" << infoLog << std::endl;
 	}
 
 	// Delete shaders after use
@@ -182,7 +181,7 @@ int Shader::getUniformLocation(const std::string& name)
 	int location = glGetUniformLocation(m_ID, name.c_str());
 
 	if (location == -1)
-		std::cout << "WARNING: Uniform \"" << name << "\" does not exist for shader at path: " << m_file_path << std::endl;
+		std::cout << "WARNING: Uniform \"" << name << "\" does not exist for shader at path: " << m_path << std::endl;
 
 	return location;
 }
