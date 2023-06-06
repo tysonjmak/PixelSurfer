@@ -2,14 +2,7 @@
 
 #include "ResourceManager.h"
 
-std::unordered_map<std::string, Resource*> ResourceManager::m_resources;
-
-void ResourceManager::load(Resource* resource, const std::string& path, const std::string& name)
-{
-	resource->load(path);
-	m_resources.emplace(name, resource);
-	std::cout << "INFO: Loaded resource \"" << name << "\" at path: " << path << std::endl;
-}
+std::unordered_map<std::string, std::weak_ptr<Resource>> ResourceManager::m_resources;
 
 void ResourceManager::dispose()
 {
@@ -17,12 +10,13 @@ void ResourceManager::dispose()
 
 	for (auto const& resource : m_resources)
 	{
-		std::string name = resource.first;
-		std::string path = resource.second->getPath();
+		auto value = resource.second.lock();
+		if (value)
+		{
+			std::string path = value->getPath();
+			value->dispose();
 
-		resource.second->dispose();
-		delete resource.second;
-
-		std::cout << "    Unloaded resource \"" << name << "\" at path: " << path << std::endl;
+			std::cout << "    Unloaded resource: " << path << std::endl;
+		}
 	}
 }

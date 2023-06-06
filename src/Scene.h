@@ -34,6 +34,15 @@ public:
 	// Final function call in the game loop. Used to draw all vertices/elements.
 	virtual void render() = 0;
 
+	/**
+	 * 
+	 * Called upon GLFW window size callback event
+	 * 
+	 * @param
+	 * width, height - New window dimensions
+	 */
+	virtual void resize(float width, float height) = 0;
+
 	// Access scene ID
 	const char* getSceneID() const
 	{

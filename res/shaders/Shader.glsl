@@ -5,7 +5,6 @@ layout (location = 0) in vec2 a_position;
 layout (location = 1) in vec2 a_tex_coords;
 
 out vec2 o_tex_coords;
-
 uniform mat4 projection;
 
 void main()
@@ -17,10 +16,9 @@ void main()
 #shader fragment
 #version 330 core
 
+layout (location = 0) out vec4 frag_color;
+
 in vec2 o_tex_coords;
-
-out vec4 frag_color;
-
 uniform sampler2D frag_texture;
 
 void main()

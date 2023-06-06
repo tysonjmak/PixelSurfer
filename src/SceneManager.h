@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stack>
-#include <memory>
 
 #include "Scene.h"
 

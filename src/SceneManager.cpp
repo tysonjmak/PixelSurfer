@@ -24,7 +24,7 @@ void SceneManager::change(std::unique_ptr<Scene> scene)
 	if (!m_scenes.empty())
 	{
 		m_scenes.top()->dispose();
-		std::cout << "INFO: Disposed scene \"" << m_scenes.top()->getSceneID() << "\"" << std::endl;
+		std::cout << "INFO: Disposed scene: " << m_scenes.top()->getSceneID() << std::endl;
 
 		m_scenes.pop();
 	}
@@ -33,7 +33,7 @@ void SceneManager::change(std::unique_ptr<Scene> scene)
 	m_scenes.push(std::move(scene));
 
 	m_scenes.top()->init();
-	std::cout << "INFO: Initialized scene \"" << m_scenes.top()->getSceneID() << "\"" << std::endl;
+	std::cout << "INFO: Initialized scene: " << m_scenes.top()->getSceneID() << std::endl;
 }
 
 void SceneManager::push(std::unique_ptr<Scene> scene)
@@ -42,14 +42,14 @@ void SceneManager::push(std::unique_ptr<Scene> scene)
 	if (!m_scenes.empty())
 	{
 		m_scenes.top()->pause();
-		std::cout << "INFO: Paused scene \"" << m_scenes.top()->getSceneID() << "\"" << std::endl;
+		std::cout << "INFO: Paused scene: " << m_scenes.top()->getSceneID() << std::endl;
 	}
 
 	// Store and initialize pushed scene
 	m_scenes.push(std::move(scene));
 
 	m_scenes.top()->init();
-	std::cout << "INFO: Initialized scene \"" << m_scenes.top()->getSceneID() << "\"" << std::endl;
+	std::cout << "INFO: Initialized scene: " << m_scenes.top()->getSceneID() << std::endl;
 }
 
 void SceneManager::pop()
@@ -58,7 +58,7 @@ void SceneManager::pop()
 	if (!m_scenes.empty())
 	{
 		m_scenes.top()->dispose();
-		std::cout << "INFO: Disposed scene \"" << m_scenes.top()->getSceneID() << "\"" << std::endl;
+		std::cout << "INFO: Disposed scene: " << m_scenes.top()->getSceneID() << std::endl;
 
 		m_scenes.pop();
 	}
@@ -67,7 +67,7 @@ void SceneManager::pop()
 	if (!m_scenes.empty())
 	{
 		m_scenes.top()->resume();
-		std::cout << "INFO: Resumed scene \"" << m_scenes.top()->getSceneID() << "\"" << std::endl;
+		std::cout << "INFO: Resumed scene: " << m_scenes.top()->getSceneID() << std::endl;
 	}
 }
 
@@ -90,6 +90,11 @@ void SceneManager::resize(float width, float height)
 {
 	m_width = width;
 	m_height = height;
+
+	if (!m_scenes.empty())
+	{
+		m_scenes.top()->resize(width, height);
+	}
 }
 
 void SceneManager::dispose()
@@ -99,7 +104,7 @@ void SceneManager::dispose()
 	while (!m_scenes.empty())
 	{
 		m_scenes.top()->dispose();
-		std::cout << "    Disposed scene \"" << m_scenes.top()->getSceneID() << "\"" << std::endl;
+		std::cout << "    Disposed scene: " << m_scenes.top()->getSceneID() << std::endl;
 
 		m_scenes.pop();
 	}

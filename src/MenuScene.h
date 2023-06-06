@@ -2,12 +2,11 @@
 
 #include "Scene.h"
 #include "Shader.h"
-#include "Texture.h"
 
-class SandboxScene : public Scene
+class MenuScene : public Scene
 {
 public:
-	SandboxScene(const char* scene_ID) : Scene(scene_ID) { }
+	MenuScene(const char* scene_ID) : Scene(scene_ID) { }
 
 	// Inherited via Scene
 	virtual void init() override;
@@ -21,8 +20,5 @@ public:
 
 private:
 	std::shared_ptr<Shader> shader;
-	std::shared_ptr<Texture> texture;
-
-	unsigned int VAO;
-	glm::mat4 projection;
 };
+

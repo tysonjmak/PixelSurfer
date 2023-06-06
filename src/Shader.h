@@ -1,10 +1,7 @@
 #pragma once
 
-#include <GL/glew.h>
 #include <glm/glm.hpp>
-#include <fstream>
-#include <sstream>
-#include <iostream>
+
 #include "Resource.h"
 
 struct ShaderSource
@@ -15,30 +12,16 @@ struct ShaderSource
 
 class Shader : public Resource
 {
-private:
-	// OpenGL shader program ID
-	unsigned int m_ID;
-
-	// Shader source strings
-	ShaderSource m_source;
-
-	// Splits shader file into vertex and fragment strings
-	void parseShader();
-
-	// Compiles the shader program
-	void compileShader();
-
-	int getUniformLocation(const std::string& name);
-
 public:
+	// Inherited via Resource
+	virtual void load(const std::string& path) override;
+	virtual void dispose() override;
 
 	// Bind shader to state machine
 	void bind() const;
 
 	// Unbind shader from state machine
 	void unbind() const;
-
-	// Uniform utilities
 
 	/**
 	 *
@@ -148,10 +131,18 @@ public:
 	 */
 	void setMat4(const std::string& name, const glm::mat4& value);
 
+private:
+	// OpenGL shader program ID
+	unsigned int m_ID;
 
-	// Inherited via Resource
-	virtual void load(const std::string& path) override;
+	// Shader source strings
+	ShaderSource m_source;
 
-	virtual void dispose() override;
+	// Splits shader file into vertex and fragment strings
+	void parseShader();
 
+	// Compiles the shader program
+	void compileShader();
+
+	int getUniformLocation(const std::string& name);
 };

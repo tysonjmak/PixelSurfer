@@ -7,18 +7,22 @@
 #include "InputManager.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
-#include "SandboxScene.h"
-#include "Shader.h"
 
-Shader* shader;
-unsigned int VAO;
-unsigned int texture;
+#include "SandboxScene.h"
+#include "MenuScene.h"
 
 void SandboxScene::init()
 {
-	ResourceManager::load(new Shader, "res/shaders/Shader.glsl", "basic");
-	shader = ResourceManager::get<Shader>("basic");
+	shader = ResourceManager::load<Shader>("res/shaders/Shader.glsl");
 	shader->bind();
+	projection = glm::ortho(
+		-SceneManager::getWidth() / 2.0f,
+		SceneManager::getWidth() / 2.0f,
+		-SceneManager::getHeight() / 2.0f,
+		SceneManager::getHeight() / 2.0f
+	);
+
+	texture = ResourceManager::load<Texture>("res/textures/awesomeface.png");
 
 	float vertices[] = {
 		// Positions       // Texture coordinates
@@ -50,32 +54,6 @@ void SandboxScene::init()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-
-	// Load and create texture
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	// Set texture wrapping parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	// Set texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	// Load image data
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load("res/textures/container.jpg", &width, &height, &nrChannels, 0);
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "ERROR: Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
 }
 
 void SandboxScene::dispose()
@@ -97,6 +75,9 @@ void SandboxScene::processInput(float dt)
 {
 	if (InputManager::isKeyPressed(GLFW_KEY_ESCAPE))
 		SceneManager::quit();
+	
+	if (InputManager::isKeyPressed(GLFW_KEY_ENTER))
+		SceneManager::change(std::make_unique<MenuScene>("Menu"));
 }
 
 void SandboxScene::update(float dt)
@@ -108,16 +89,19 @@ void SandboxScene::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	shader->bind();
-	glm::mat4 projection = glm::ortho(
-		-SceneManager::getWidth() / 2.0f,
-		SceneManager::getWidth() / 2.0f,
-		-SceneManager::getHeight() / 2.0f,
-		SceneManager::getHeight() / 2.0f
-	);
 	shader->setMat4("projection", projection);
+	texture->bind();
 
-	glBindTexture(GL_TEXTURE_2D, texture);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
+void SandboxScene::resize(float width, float height)
+{
+	projection = glm::ortho(
+		-width / 2.0f,
+		width / 2.0f,
+		-height / 2.0f,
+		height / 2.0f
+	);
 }
