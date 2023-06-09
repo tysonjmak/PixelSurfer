@@ -1,37 +1,38 @@
 #pragma once
 
+#include <iostream>
 #include <unordered_map>
+#include <memory>
 
-#include "Shader.h"
+#include "Resource.h"
 
 class ResourceManager
 {
 public:
 	template <typename T>
-	static std::shared_ptr<T> load(const std::string& path)
+	static void load(const std::string& path)
 	{
 		static_assert(std::is_base_of<Resource, T>::value, "ERROR: T must inherit type \"Resource\"");
 
-		auto resource = m_resources[path].lock();
-		if (!resource)
+		if (m_resources.find(path) == m_resources.end())
 		{
-			m_resources[path] = resource = std::make_shared<T>();
+			T* resource = new T;
 			resource->load(path);
 
-			std::cout << "INFO: Loaded resource: " << path << std::endl;
-		}
+			m_resources.emplace(path, resource);
 
-		auto return_value = std::dynamic_pointer_cast<T>(resource);
-		if (!return_value)
-		{
-			throw std::runtime_error("ERROR: Resource \"" + path + "\" is already loaded as another type.");
+			std::cout << "    Loaded resource: " << path << std::endl;
 		}
+	}
 
-		return return_value;
+	template <typename T>
+	static T* get(const std::string& path)
+	{
+		return dynamic_cast<T*>(m_resources[path]);
 	}
 
 	static void dispose();
 
 //private:
-	static std::unordered_map<std::string, std::weak_ptr<Resource>> m_resources;
+	static std::unordered_map<std::string, Resource*> m_resources;
 };

@@ -24,7 +24,7 @@ void SceneManager::change(std::unique_ptr<Scene> scene)
 	if (!m_scenes.empty())
 	{
 		m_scenes.top()->dispose();
-		std::cout << "INFO: Disposed scene: " << m_scenes.top()->getSceneID() << std::endl;
+		std::cout << "INFO: Disposed scenes: " << m_scenes.top()->getSceneID() << std::endl;
 
 		m_scenes.pop();
 	}
@@ -99,7 +99,7 @@ void SceneManager::resize(float width, float height)
 
 void SceneManager::dispose()
 {
-	std::cout << "INFO: Disposing SceneManager:" << std::endl;
+	std::cout << "INFO: Disposing scenes:" << std::endl;
 
 	while (!m_scenes.empty())
 	{

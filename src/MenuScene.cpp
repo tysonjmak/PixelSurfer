@@ -13,7 +13,7 @@
 
 void MenuScene::init()
 {
-	shader = ResourceManager::load<Shader>("res/shaders/Shader.glsl");
+	shader = ResourceManager::get<Shader>("res/shaders/sprite.glsl");
 	shader->bind();
 	shader->unbind();
 }

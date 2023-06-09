@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Scene.h"
-#include "Shader.h"
-#include "Texture.h"
+#include "Camera.h"
+#include "SpriteRenderer.h"
 
 class SandboxScene : public Scene
 {
@@ -20,9 +20,7 @@ public:
 	virtual void resize(float width, float height) override;
 
 private:
-	std::shared_ptr<Shader> shader;
-	std::shared_ptr<Texture> texture;
-
-	unsigned int VAO;
-	glm::mat4 projection;
+	Sprite* sprite1;
+	Sprite* sprite2;
+	Camera* camera;
 };

@@ -58,6 +58,19 @@ int main()
 		return -1;
 	}
 
+	// Enable blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	// Load all game resources
+	std::cout << "INFO: Loading resources:" << std::endl;
+	ResourceManager::load<Shader>("res/shaders/sprite.glsl");
+	ResourceManager::load<Texture>("res/textures/awesomeface.png");
+	ResourceManager::load<Texture>("res/textures/container.jpg");
+
+	// Initialize renderer and set sprite renderer shader
+	SpriteRenderer::init(ResourceManager::get<Shader>("res/shaders/sprite.glsl"));
+
 	// Set initial scene and set running state
 	SceneManager::resize(SCR_WIDTH, SCR_HEIGHT);
 	SceneManager::change(std::make_unique<SandboxScene>("Sandbox"));

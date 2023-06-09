@@ -19,6 +19,6 @@ public:
 	virtual void resize(float width, float height) override;
 
 private:
-	std::shared_ptr<Shader> shader;
+	Shader* shader;
 };
 
